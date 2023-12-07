@@ -16,13 +16,13 @@ func main() {
 	value := 0
 
 	// check against calibration value
-	lines := strings.Split(calibrationValues2, "\n")
+	lines := strings.Split(calibrationValues, "\n")
 	for _, line := range lines {
-		// numbers := extractNumbersFromString(line) // golang regex isn't all that useful here
-		num1 := getNumber(line, true)
-		num2 := getNumber(line, false)
+		numbers := extractNumbersFromString(line)
+		num1 := numbers[0]
+		num2 := numbers[len(numbers)-1]
 
-		concatted := string(rune(num1)) + "" + string(rune(num2))
+		concatted := string(num1) + "" + string(num2)
 		println(concatted)
 		concNum, _ := strconv.Atoi(concatted)
 		value += concNum
