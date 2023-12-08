@@ -32,6 +32,18 @@ public class day08 {
                 "BBB = (AAA, ZZZ)",
                 "ZZZ = (ZZZ, ZZZ)",
         });
+        var node3 = Arrays.asList(new String[] {
+                "LR",
+                "",
+                "11A = (11B, XXX)",
+                "11B = (XXX, 11Z)",
+                "11Z = (11B, XXX)",
+                "22A = (22B, XXX)",
+                "22B = (22C, 22C)",
+                "22C = (22Z, 22Z)",
+                "22Z = (22B, 22B)",
+                "XXX = (XXX, XXX)",
+        });
 
         Path filePath = Paths
                 .get(".\\sho\\inputs\\day08.txt");
@@ -41,7 +53,7 @@ public class day08 {
         var instructions = list.get(0);
         var directions = list.subList(2, list.size());
 
-        System.out.println(instructions);
+        // System.out.println(instructions);
         // System.out.println(directions);
 
         var map = readLinesIntoMap(directions);
@@ -64,8 +76,11 @@ public class day08 {
 
         for (String line : lines) {
             var map = new HashMap<String, String>();
-            var lineLetters = line.replaceAll("[^A-Z]", "");
+            var lineLetters = line.replaceAll("[^a-zA-Z0-9]", "");
             var lineLettersList = splitEveryNthChar(lineLetters, 3);
+
+            // System.out.println(lineLetters);
+            // System.out.println(lineLettersList);
 
             var start = lineLettersList.get(0);
             var left = lineLettersList.get(1);
@@ -80,22 +95,32 @@ public class day08 {
     }
 
     public static int countSteps(String[] instructions, Map<String, Map<String, String>> directions) {
-        int count = 0;
-        boolean onZZZ = false;
+        var count = 0;
+        var index = new int[] { 0 };
+        var onZZZ = false;
 
-        var listItem = directions.get("AAA");
+        var set = directions.keySet()
+                .stream()
+                .filter(s -> s.endsWith("A"))
+                .toList();
+        // System.out.println(set);
+
         while (!onZZZ) {
-            var name = listItem.get(instructions[count % instructions.length]);
-            if (name.equals("ZZZ")) {
+            var names = set.stream().map(element -> {
+                var listItem = directions.get(element).get(instructions[index[0] % instructions.length]);
+                return listItem;
+            }).toList();
+            if (names.stream().allMatch(name -> name.endsWith("Z"))) {
                 onZZZ = true;
             } else {
-                // System.out.println(name);
-                listItem = directions.get(name);
+                // System.out.println(count + ": " + names);
+                set = names;
                 // System.out.println(listItem);
 
                 count++;
+                index[0]++;
             }
-            // System.out.println(count);
+            System.out.println(count);
         }
 
         return count + 1;
