@@ -10,15 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class day03 {
+public class Day03Main {
     /**
      *
      */
     private static final String symbolRegEx = "[^A-Za-z0-9.]";
 
     public static void main(String[] args) throws IOException {
-        var schematic = Arrays.asList(new String[] {
-                "467..114..",
+        var schematic = Arrays.asList("467..114..",
                 "...*......",
                 "..35..633.",
                 "......#...",
@@ -27,22 +26,19 @@ public class day03 {
                 "..592.....",
                 "......755.",
                 "...$.*....",
-                ".664.598..",
-        });
+                ".664.598..");
 
         Path filePath = Paths
                 .get(".\\sho\\inputs\\day03.txt");
         var input = Files.readAllLines(filePath);
         var relevantNumbers = getRelevantNumbers(input);
 
-        var value = new int[] { 0 };
-        var counter = new int[] { 0 };
+        var value = new int[]{0};
+        var counter = new int[]{0};
         relevantNumbers.values().forEach(list -> {
             counter[0]++;
             // System.out.println(counter[0] + ": " + list);
-            list.forEach(num -> {
-                value[0] += num;
-            });
+            list.forEach(num -> value[0] += num);
         });
         System.out.println(value[0]);
     }
@@ -56,7 +52,7 @@ public class day03 {
             var chars = line.split("");
 
             var isRelevant = false;
-            var numberString = "";
+            StringBuilder numberString = new StringBuilder();
             var list = new ArrayList<Integer>();
             var nonRelevantList = new ArrayList<Integer>();
             for (int j = 0; j < chars.length; j++) {
@@ -68,10 +64,10 @@ public class day03 {
                     boolean topIsSymbol = i != 0 && schematic.get(i - 1).split("")[j].matches(symbolRegEx);
                     boolean topLeftIsSymbol = i != 0 && j != 0
                             && schematic.get(i - 1).split("")[j - 1]
-                                    .matches(symbolRegEx);
+                            .matches(symbolRegEx);
                     boolean topRightIsSymbol = i != 0 && j < chars.length - 1
                             && schematic.get(i - 1).split("")[j + 1]
-                                    .matches(symbolRegEx);
+                            .matches(symbolRegEx);
 
                     boolean bottomIsSymbol = i < schematic.size() - 1
                             && schematic.get(i + 1).split("")[j].matches(symbolRegEx);
@@ -79,7 +75,7 @@ public class day03 {
                             && schematic.get(i + 1).split("")[j - 1].matches(symbolRegEx);
                     boolean bottomRightIsSymbol = i < schematic.size() - 1 && j < chars.length - 1
                             && schematic.get(i + 1).split("")[j + 1]
-                                    .matches(symbolRegEx);
+                            .matches(symbolRegEx);
 
                     if (previousIsSymbol
                             || nextIsSymbol
@@ -91,7 +87,7 @@ public class day03 {
                             || topLeftIsSymbol) {
                         isRelevant = true;
                     }
-                    numberString = new String(numberString + charElement);
+                    numberString.append(charElement);
 
                     // if (numberString.equals("368") && isRelevant)
                     // System.out.println(
@@ -101,20 +97,20 @@ public class day03 {
                     // + i
                     // + ":" + j + " " + schematic.get(i + 1).split("")[j]);
                 } else {
-                    if (!numberString.equals("") && isRelevant) {
+                    if ((!numberString.isEmpty()) && isRelevant) {
                         try {
-                            list.add(Integer.parseInt(numberString.trim()));
+                            list.add(Integer.parseInt(numberString.toString().trim()));
                         } catch (NumberFormatException e) {
                             // System.out.println(isRelevant);
                             // System.out.println(chars[j - 1] + ":" + chars[j] + ", i: " + i + " j: " + j);
                             // System.out.println(numberString);
                             e.printStackTrace();
                         }
-                    } else if (!numberString.equals("")) {
-                        nonRelevantList.add(Integer.parseInt(numberString.trim()));
+                    } else if (numberString.length() > 0) {
+                        nonRelevantList.add(Integer.parseInt(numberString.toString().trim()));
                     }
                     isRelevant = false;
-                    numberString = "";
+                    numberString = new StringBuilder();
                 }
             }
 
@@ -122,7 +118,7 @@ public class day03 {
             nonRelevantNumbers.put(i, nonRelevantList);
         }
 
-        var counter = new int[] { 0 };
+        var counter = new int[]{0};
         nonRelevantNumbers.values().forEach(list -> {
             counter[0]++;
             System.out.println(counter[0] + ": " + list);

@@ -12,10 +12,9 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class day08 {
+public class Day08Main {
     public static void main(String[] args) throws IOException {
-        var node = Arrays.asList(new String[] {
-                "RL",
+        var node = Arrays.asList("RL",
                 "",
                 "AAA = (BBB, CCC)",
                 "BBB = (DDD, EEE)",
@@ -23,17 +22,13 @@ public class day08 {
                 "DDD = (DDD, DDD)",
                 "EEE = (EEE, EEE)",
                 "GGG = (GGG, GGG)",
-                "ZZZ = (ZZZ, ZZZ)",
-        });
-        var node2 = Arrays.asList(new String[] {
-                "LLR",
+                "ZZZ = (ZZZ, ZZZ)");
+        var node2 = Arrays.asList("LLR",
                 "",
                 "AAA = (BBB, BBB)",
                 "BBB = (AAA, ZZZ)",
-                "ZZZ = (ZZZ, ZZZ)",
-        });
-        var node3 = Arrays.asList(new String[] {
-                "LR",
+                "ZZZ = (ZZZ, ZZZ)");
+        var node3 = Arrays.asList("LR",
                 "",
                 "11A = (11B, XXX)",
                 "11B = (XXX, 11Z)",
@@ -42,14 +37,12 @@ public class day08 {
                 "22B = (22C, 22C)",
                 "22C = (22Z, 22Z)",
                 "22Z = (22B, 22B)",
-                "XXX = (XXX, XXX)",
-        });
+                "XXX = (XXX, XXX)");
 
         Path filePath = Paths
                 .get(".\\sho\\inputs\\day08.txt");
-        var input = Files.readAllLines(filePath);
 
-        var list = input;
+        var list = Files.readAllLines(filePath);
         var instructions = list.get(0);
         var directions = list.subList(2, list.size());
 
@@ -106,10 +99,7 @@ public class day08 {
         // System.out.println(set);
 
         while (!onZZZ) {
-            var names = set.stream().map(element -> {
-                var listItem = directions.get(element).get(instructions[index[0] % instructions.length]);
-                return listItem;
-            }).toList();
+            var names = set.stream().map(element -> directions.get(element).get(instructions[index[0] % instructions.length])).toList();
             if (names.stream().allMatch(name -> name.endsWith("Z"))) {
                 onZZZ = true;
             } else {

@@ -6,10 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class day05 {
+public class Day05Main {
     public static void main(String[] args) throws IOException {
-        var example = Arrays.asList(new String[]{
-                "seeds: 79 14 55 13",
+        var example = Arrays.asList("seeds: 79 14 55 13",
                 "",
                 "seed-to-soil map:",
                 "50 98 2",
@@ -41,8 +40,7 @@ public class day05 {
                 "",
                 "humidity-to-location map:",
                 "60 56 37",
-                "56 93 4"
-        });
+                "56 93 4");
 
         Path filePath = Paths
                 .get(".\\sho\\inputs\\day05.txt");
@@ -59,22 +57,20 @@ public class day05 {
         var temperatureToHumidityMap = getTemperatureToHumidityMap(list);
         var humidityToLocationMap = getHumidityToLocationMap(list);
 
-        Long currLocation = null;
-        for (String seed : seeds) {
-            var soil = optionalGetFromList(seedsToSoilMap, Long.parseLong(seed));
-            var fertilizer = optionalGetFromList(soilToFertilizerMap, soil);
-            var water = optionalGetFromList(fertilizerToWaterMap, fertilizer);
-            var light = optionalGetFromList(waterToLightMap, water);
-            var temperature = optionalGetFromList(lightToTemperatureMap, light);
-            var humidity = optionalGetFromList(temperatureToHumidityMap, temperature);
-            var location = optionalGetFromList(humidityToLocationMap, humidity);
+        var mappedLocationMap = humidityToLocationMap.stream().map((row) -> {
+            var splitRow = row.split(" ");
 
-//            System.out.println(seed + ", " + soil + ", " + fertilizer + ", " + water + ", " + light + ", " + temperature
-//                    + ", " + humidity + ", " + location);
+            return Long.parseLong(splitRow[0]);
+        }).toList();
 
-            if (currLocation == null || location < currLocation)
-                currLocation = location;
-        }
+        var lowestLocation = Collections.min(mappedLocationMap);
+        System.out.println(lowestLocation);
+
+//        Long currLocation = null;
+//        for (int i = 0; i < seeds.length; i = i + 2) {
+//            var thread = new Day05Thread(Long.parseLong(seeds[i]), Long.parseLong(seeds[i + 1]), seedsToSoilMap, soilToFertilizerMap, fertilizerToWaterMap, waterToLightMap, lightToTemperatureMap, temperatureToHumidityMap, humidityToLocationMap, currLocation);
+//            thread.start();
+//        }
 
         // System.out.println();
         // System.out.println(seedsToSoilMap);
@@ -85,10 +81,10 @@ public class day05 {
         // System.out.println(temperatureToHumidityMap);
         // System.out.println(humidityToLocationMap);
 
-        System.out.println(currLocation);
+//        System.out.println(currLocation);
     }
 
-    private static Long optionalGetFromList(List<String> list, Long key) {
+    static Long optionalGetFromList(List<String> list, Long key) {
         for (String line : list) {
             var splitLine = line.split(" ");
 
@@ -100,9 +96,8 @@ public class day05 {
 //            System.out.println(start + ", " + count + ", " + representation);
 
             if (key >= start && key <= (start + count)) {
-                var result = representation + (key - start);
-//                System.out.println("key: " + key + ", " + result);
-                return result;
+                //                System.out.println("key: " + key + ", " + result);
+                return representation + (key - start);
             }
         }
         return key;
@@ -152,7 +147,7 @@ public class day05 {
         var linesMap = new HashMap<Long, Long>();
 
         for (String line : lines) {
-            var numbers = Arrays.asList(line.split(" ")).stream().map(num -> Long.parseLong(num)).toList();
+            var numbers = Arrays.stream(line.split(" ")).map(Long::parseLong).toList();
 
             for (int i = 0; i < numbers.get(2); i++) {
                 linesMap.put(numbers.get(1) + i, numbers.get(0) + i);

@@ -10,21 +10,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class day07 {
+public class Day07Main {
 
     public static void main(String[] args) throws IOException {
         var example = Arrays
-                .asList(new String[] { "32T3K 765", "T55J5 684", "KK677 28", "KTJJT 220", "QQQJA 483" });
+                .asList("32T3K 765", "T55J5 684", "KK677 28", "KTJJT 220", "QQQJA 483");
 
         Path filePath = Paths
                 .get(".\\sho\\inputs\\day07.txt");
         var input = Files.readAllLines(filePath);
 
         var cardStrength = Arrays
-                .asList(new String[] { "J", "2", "3", "4", "5", "6", "7", "8", "9", "T", "Q", "K", "A" });
+                .asList("J", "2", "3", "4", "5", "6", "7", "8", "9", "T", "Q", "K", "A");
 
         var list = new ArrayList<Map>();
-        input.stream().forEach(element -> {
+        input.forEach(element -> {
             String[] split = element.split(" ");
             var hand = split[0];
             var bid = split[1];
@@ -75,18 +75,16 @@ public class day07 {
         var value = 0;
         for (int i = 0; i < list.size(); i++) {
             var a = ((String) list.get(i).get("hand")).split("");
-            var s = String.join("', '", a);
+//            var s = String.join("', '", a);
             // System.out.println("['" + s + "']");
             // System.out.println(list.get(i).get("hand") + ": " + list.get(i).get("type"));
-            value += (int) Integer.parseInt((String) list.get(i).get("bid")) * (i + 1);
+            value += Integer.parseInt((String) list.get(i).get("bid")) * (i + 1);
         }
         System.out.println(value);
     }
 
     public static int optionalUpdateType(int currType, int newType) {
-        if (currType > newType)
-            return currType;
-        return newType;
+        return Math.max(currType, newType);
     }
 
     // Five of a kind = 6, Four of a kind = 5, Full house = 4, Three of a kind = 3,
@@ -98,9 +96,9 @@ public class day07 {
             return 6;
         }
 
-        var counter = new int[] { 0 };
+        var counter = new int[]{0};
         var usedCards = new ArrayList<>();
-        var usedJokers = new boolean[] { false };
+        var usedJokers = new boolean[]{false};
 
         counter[0] = -1;
         var fiveOfAKind = map.values().stream()
@@ -141,7 +139,7 @@ public class day07 {
     }
 
     private static Predicate extractedFilter(Map map, int jokerCount, int[] counter, ArrayList<Object> usedCards,
-            boolean[] usedJokers, int value) {
+                                             boolean[] usedJokers, int value) {
         return item -> {
             counter[0]++;
             var intValue = (int) item;

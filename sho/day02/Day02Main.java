@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class day02 {
-    private static String[] availableBoxColors = new String[] { "blue", "red", "green" };
-    private static Map<String, Integer> availableBoxes = Map.of("red", 12, "green", 13, "blue", 14);
+public class Day02Main {
+    private static final String[] availableBoxColors = new String[] { "blue", "red", "green" };
+    private static final Map<String, Integer> availableBoxes = Map.of("red", 12, "green", 13, "blue", 14);
 
     public static void main(String[] args) throws IOException {
         var games = new String[] {

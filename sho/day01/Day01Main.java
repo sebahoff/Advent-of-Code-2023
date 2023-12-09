@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-public class day01 {
+public class Day01Main {
     private static final String[] numArr = new String[] { "zero", "one", "two", "three", "four", "five", "six", "seven",
             "eight", "nine" };
 
@@ -34,13 +34,13 @@ public class day01 {
     public static String extractNumbersFromString(String s) {
         var newString = new String[] { s };
 
-        while (!Stream.of(numArr).anyMatch(num -> newString[0].startsWith(num))
+        while (Stream.of(numArr).noneMatch(num -> newString[0].startsWith(num))
                 && !Character.isDigit(newString[0].charAt(
                         0))) {
             newString[0] = newString[0].substring(1);
         }
 
-        while (!Stream.of(numArr).anyMatch(num -> newString[0].endsWith(num))
+        while (Stream.of(numArr).noneMatch(num -> newString[0].endsWith(num))
                 && !Character.isDigit(newString[0].charAt(
                         newString[0].length() - 1))) {
             newString[0] = newString[0].substring(0, newString[0].length() - 1);
@@ -54,8 +54,7 @@ public class day01 {
             index = s.length() - 1;
         }
         try {
-            var intVal = Integer.parseInt(String.valueOf(s.charAt(index)));
-            return intVal;
+            return Integer.parseInt(String.valueOf(s.charAt(index)));
         } catch (Exception e) {
             for (int j = 0; j < numArr.length; j++) {
                 var num = numArr[j];

@@ -9,13 +9,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
-public class day06 {
+public class Day06Main {
     public static void main(String[] args) throws IOException {
-        var example = Arrays.asList(new String[] {
-                "Time:      7  15   30",
-                "Distance:  9  40  200",
-        });
+        var example = Arrays.asList("Time:      7  15   30",
+                "Distance:  9  40  200");
         Path filePath = Paths
                 .get(".\\sho\\inputs\\day06.txt");
         var input = Files.readAllLines(filePath);
@@ -25,23 +24,23 @@ public class day06 {
         // System.out.println(map);
         for (Map<String, Long> element : map) {
             var count = getPossibleWinningCombinations(element.get("time"), element.get("distance"));
-            value *= count;
+            value *= (int) count;
         }
         System.out.println(value);
     }
 
     public static List<Map<String, Long>> readLinesIntoMap(List<String> lines, boolean part2) {
-        var times = Arrays.asList(lines.get(0).replaceAll("Time:", "").split(" ")).stream()
-                .filter(time -> !time.trim().equals(""))
+        var times = Arrays.stream(lines.get(0).replaceAll("Time:", "").split(" "))
+                .filter(time -> !time.trim().isEmpty())
                 .map(time -> Long.parseLong(time.trim())).toList();
-        var distances = Arrays.asList(lines.get(1).replaceAll("Distance:", "").split(" ")).stream()
-                .filter(time -> !time.trim().equals(""))
+        var distances = Arrays.stream(lines.get(1).replaceAll("Distance:", "").split(" "))
+                .filter(time -> !time.trim().isEmpty())
                 .map(time -> Long.parseLong(time.trim())).toList();
 
         if (part2) {
-            times = Arrays.asList(lines.get(0).replaceAll("[^0-9]", "")).stream()
+            times = Stream.of(lines.get(0).replaceAll("[^0-9]", ""))
                     .map(time -> Long.parseLong(time.trim())).toList();
-            distances = Arrays.asList(lines.get(1).replaceAll("[^0-9]", "")).stream()
+            distances = Stream.of(lines.get(1).replaceAll("[^0-9]", ""))
                     .map(time -> Long.parseLong(time.trim())).toList();
         }
 
