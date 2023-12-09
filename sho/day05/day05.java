@@ -4,14 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class day05 {
     public static void main(String[] args) throws IOException {
-        var example = Arrays.asList(new String[] {
+        var example = Arrays.asList(new String[]{
                 "seeds: 79 14 55 13",
                 "",
                 "seed-to-soil map:",
@@ -64,16 +61,16 @@ public class day05 {
 
         Long currLocation = null;
         for (String seed : seeds) {
-            var soil = optionalGetFromMap(seedsToSoilMap, Long.parseLong(seed));
-            var fertilizer = optionalGetFromMap(soilToFertilizerMap, soil);
-            var water = optionalGetFromMap(fertilizerToWaterMap, fertilizer);
-            var light = optionalGetFromMap(waterToLightMap, water);
-            var temperature = optionalGetFromMap(lightToTemperatureMap, light);
-            var humidity = optionalGetFromMap(temperatureToHumidityMap, temperature);
-            var location = optionalGetFromMap(humidityToLocationMap, humidity);
+            var soil = optionalGetFromList(seedsToSoilMap, Long.parseLong(seed));
+            var fertilizer = optionalGetFromList(soilToFertilizerMap, soil);
+            var water = optionalGetFromList(fertilizerToWaterMap, fertilizer);
+            var light = optionalGetFromList(waterToLightMap, water);
+            var temperature = optionalGetFromList(lightToTemperatureMap, light);
+            var humidity = optionalGetFromList(temperatureToHumidityMap, temperature);
+            var location = optionalGetFromList(humidityToLocationMap, humidity);
 
-            System.out.println(seed + ", " + soil + ", " + fertilizer + ", " + water + ", " + light + ", " + temperature
-                    + ", " + humidity + ", " + location);
+//            System.out.println(seed + ", " + soil + ", " + fertilizer + ", " + water + ", " + light + ", " + temperature
+//                    + ", " + humidity + ", " + location);
 
             if (currLocation == null || location < currLocation)
                 currLocation = location;
@@ -91,51 +88,64 @@ public class day05 {
         System.out.println(currLocation);
     }
 
-    private static Long optionalGetFromMap(Map<Long, Long> map, Long key) {
-        if (map.containsKey(key)) {
-            return map.get(key);
+    private static Long optionalGetFromList(List<String> list, Long key) {
+        for (String line : list) {
+            var splitLine = line.split(" ");
+
+
+            var representation = Long.parseLong(splitLine[0].trim());
+
+            var start = Long.parseLong(splitLine[1].trim());
+            var count = Long.parseLong(splitLine[2].trim());
+//            System.out.println(start + ", " + count + ", " + representation);
+
+            if (key >= start && key <= (start + count)) {
+                var result = representation + (key - start);
+//                System.out.println("key: " + key + ", " + result);
+                return result;
+            }
         }
         return key;
     }
 
-    private static Map<Long, Long> getHumidityToLocationMap(List<String> example) {
-        return readMapListIntoMapObject(
+    private static List<String> getHumidityToLocationMap(List<String> example) {
+        return
                 example.subList(example.indexOf("humidity-to-location map:") + 1,
-                        example.size()));
+                        example.size());
     }
 
-    private static Map<Long, Long> getTemperatureToHumidityMap(List<String> example) {
-        return readMapListIntoMapObject(
+    private static List<String> getTemperatureToHumidityMap(List<String> example) {
+        return
                 example.subList(example.indexOf("temperature-to-humidity map:") + 1,
-                        example.indexOf("humidity-to-location map:") - 1));
+                        example.indexOf("humidity-to-location map:") - 1);
     }
 
-    private static Map<Long, Long> getLightToTemperatureMap(List<String> example) {
-        return readMapListIntoMapObject(
+    private static List<String> getLightToTemperatureMap(List<String> example) {
+        return
                 example.subList(example.indexOf("light-to-temperature map:") + 1,
-                        example.indexOf("temperature-to-humidity map:") - 1));
+                        example.indexOf("temperature-to-humidity map:") - 1);
     }
 
-    private static Map<Long, Long> getWaterToLightMap(List<String> example) {
-        return readMapListIntoMapObject(example.subList(example.indexOf("water-to-light map:") + 1,
-                example.indexOf("light-to-temperature map:") - 1));
+    private static List<String> getWaterToLightMap(List<String> example) {
+        return example.subList(example.indexOf("water-to-light map:") + 1,
+                example.indexOf("light-to-temperature map:") - 1);
     }
 
-    private static Map<Long, Long> getFertilizerToWaterMap(List<String> example) {
-        return readMapListIntoMapObject(
+    private static List<String> getFertilizerToWaterMap(List<String> example) {
+        return
                 example.subList(example.indexOf("fertilizer-to-water map:") + 1,
-                        example.indexOf("water-to-light map:") - 1));
+                        example.indexOf("water-to-light map:") - 1);
     }
 
-    private static Map<Long, Long> getSoilToFertilizerMap(List<String> example) {
-        return readMapListIntoMapObject(
+    private static List<String> getSoilToFertilizerMap(List<String> example) {
+        return
                 example.subList(example.indexOf("soil-to-fertilizer map:") + 1,
-                        example.indexOf("fertilizer-to-water map:") - 1));
+                        example.indexOf("fertilizer-to-water map:") - 1);
     }
 
-    private static Map<Long, Long> getSeedsToSoilMap(List<String> example) {
-        return readMapListIntoMapObject(example.subList(example.indexOf("seed-to-soil map:") + 1,
-                example.indexOf("soil-to-fertilizer map:") - 1));
+    private static List<String> getSeedsToSoilMap(List<String> example) {
+        return example.subList(example.indexOf("seed-to-soil map:") + 1,
+                example.indexOf("soil-to-fertilizer map:") - 1);
     }
 
     public static Map<Long, Long> readMapListIntoMapObject(List<String> lines) {
