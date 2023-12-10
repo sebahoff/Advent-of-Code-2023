@@ -57,14 +57,9 @@ public class Day05Main {
         var temperatureToHumidityMap = getTemperatureToHumidityMap(list);
         var humidityToLocationMap = getHumidityToLocationMap(list);
 
-        var mappedLocationMap = humidityToLocationMap.stream().map((row) -> {
-            var splitRow = row.split(" ");
-
-            return Long.parseLong(splitRow[0]);
-        }).toList();
-
-        var lowestLocation = Collections.min(mappedLocationMap);
-        System.out.println(lowestLocation);
+        // brute forced part 2 because of optimization issues
+        var lowest = Collections.min(temperatureToHumidityMap);
+        System.out.println(lowest);
 
 //        Long currLocation = null;
 //        for (int i = 0; i < seeds.length; i = i + 2) {
